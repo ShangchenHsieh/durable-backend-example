@@ -19,6 +19,17 @@ services:
       timeout: 3s
       retries: 12
 
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379" # optional host access to Redis
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
   redpanda-console:
     image: docker.redpanda.com/redpandadata/console:v2.7.2
     container_name: redpanda-console
