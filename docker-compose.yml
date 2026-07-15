@@ -56,9 +56,9 @@ services:
     build: ./monitor-server
     container_name: monitor-server
 
-  worker:
-    build: ./worker
-    container_name: worker
+  worker-server:
+    build: ./worker-server
+    container_name: worker-server
     env_file: .env.example
     depends_on:
       redpanda:
