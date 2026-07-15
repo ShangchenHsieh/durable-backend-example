@@ -1,0 +1,73 @@
+services:
+  # ── Infrastructure (pulled images, no code of ours) ──────────────────────
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:v24.2.7
+    container_name: redpanda
+    command:
+      - redpanda
+      - start
+      - --mode=dev-container
+      - --smp=1
+      - --default-log-level=info
+      - --kafka-addr=internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr=internal://redpanda:9092,external://localhost:19092
+    ports:
+      - "19092:19092" # optional host access to the broker
+    healthcheck:
+      test: [ "CMD-SHELL", "rpk cluster health | grep -E 'Healthy:.+true'" ]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  redpanda-console:
+    image: docker.redpanda.com/redpandadata/console:v2.7.2
+    container_name: redpanda-console
+    environment:
+      KAFKA_BROKERS: redpanda:9092
+    ports:
+      - "8081:8080" # web UI to watch messages: http://localhost:8081
+    depends_on:
+      redpanda:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "8080:80" # the only client entrypoint: http://localhost:8080, Docker forwards 8080 to 80
+    depends_on:
+      - api-server
+      - monitor-server
+
+  # ── Our services (built from source) ─────────────────────────────────────
+  api-server:
+    build: ./api-server
+    container_name: api-server
+    env_file: .env.example
+    depends_on:
+      redpanda:
+        condition: service_healthy
+
+  # A second HTTP service, reachable only via the /monitor prefix.
+  # No Kafka — it exists to show nginx path-based routing.
+  monitor-server:
+    build: ./monitor-server
+    container_name: monitor-server
+
+  worker:
+    build: ./worker
+    container_name: worker
+    env_file: .env.example
+    depends_on:
+      redpanda:
+        condition: service_healthy
+
+  notification-server:
+    build: ./notification-server
+    container_name: notification-server
+    env_file: .env.example
+    depends_on:
+      redpanda:
+        condition: service_healthy
