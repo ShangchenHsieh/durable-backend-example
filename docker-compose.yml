@@ -71,6 +71,8 @@ services:
     depends_on:
       redpanda:
         condition: service_healthy
+      redis:
+        condition: service_healthy
 
   # A second HTTP service, reachable only via the /monitor prefix.
   # No Kafka — it exists to show nginx path-based routing.
