@@ -115,7 +115,7 @@ services:
   celery-worker:
     build: ./task-server
     container_name: celery-worker
-    command: [ "celery", "-A", "tasks", "worker", "--loglevel=info" ]
+    command: [ "celery", "-A", "tasks", "worker", "--loglevel=info", "--concurrency=1" ]
     env_file: .env.example
     depends_on:
       redis:

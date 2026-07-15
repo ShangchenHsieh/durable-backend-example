@@ -22,7 +22,7 @@ celery.conf.beat_schedule = {
     }
 }
 
-_beat_count = 0  # per-worker-process counter for the periodic report
+_beat_count = 0  # incremented in the celery-worker child; celery-worker runs --concurrency=1 so this stays a single monotonic counter
 
 
 def build_result(user: str, action: str) -> dict:
