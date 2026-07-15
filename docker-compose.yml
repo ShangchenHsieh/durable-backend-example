@@ -104,6 +104,14 @@ services:
       redpanda:
         condition: service_healthy
 
+  ai-server:
+    build: ./ai-server
+    container_name: ai-server
+    env_file: .env.example
+    depends_on:
+      redpanda:
+        condition: service_healthy
+
   celery-worker:
     build: ./task-server
     container_name: celery-worker
