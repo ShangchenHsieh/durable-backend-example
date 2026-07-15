@@ -12,13 +12,17 @@ from fastapi.responses import JSONResponse
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
 log = logging.getLogger("api")
 
+# Kafka
 BROKER = os.getenv("KAFKA_BROKER", "redpanda:9092")
 JOBS_TOPIC = os.getenv("JOBS_TOPIC", "jobs")
+
+# Redis
 REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379/0")
 
 producer = Producer({"bootstrap.servers": BROKER})
 # Enqueue Celery tasks by name only — api-server never imports task-server code.
 celery = Celery("api", broker=REDIS_URL, backend=REDIS_URL)
+
 app = FastAPI(title="api-server")
 
 

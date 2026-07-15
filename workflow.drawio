@@ -1,0 +1,161 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="24.7.7">
+  <diagram id="workflow-main" name="Workflow">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="820" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ===== Title ===== -->
+        <mxCell id="title" value="backend_example — Workflow: Kafka event stream (pub/sub, fan-out) + Celery task queue (queue + scheduler)" style="text;html=1;fontSize=16;fontStyle=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="1200" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Track band labels ===== -->
+        <mxCell id="band-kafka" value="KAFKA TRACK — POST /api/stream : one topic → many consumer groups, each gets every event" style="text;html=1;fontSize=12;fontStyle=1;align=left;verticalAlign=middle;fontColor=#10739E;" vertex="1" parent="1">
+          <mxGeometry x="560" y="70" width="900" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="band-celery" value="CELERY TRACK — POST /api/queue : one task → one worker runs it (+ Beat fires periodic tasks)" style="text;html=1;fontSize=12;fontStyle=1;align=left;verticalAlign=middle;fontColor=#6B8E23;" vertex="1" parent="1">
+          <mxGeometry x="560" y="470" width="900" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Client / Gateway column ===== -->
+        <mxCell id="client" value="Client&#10;curl :8080" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="330" width="110" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="nginx" value="nginx&#10;API gateway&#10;(:8080 → :80)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="320" width="120" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="api" value="api-server&#10;FastAPI&#10;(publisher / enqueuer)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="390" y="315" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="monitor" value="monitor-server&#10;(GET /monitor)&#10;no Kafka — routing demo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="390" y="470" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Redpanda broker container ===== -->
+        <mxCell id="redpanda-box" value="Redpanda — Kafka-API broker  (:9092)" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=none;strokeColor=#10739E;verticalAlign=top;fontStyle=2;fontColor=#10739E;" vertex="1" parent="1">
+          <mxGeometry x="580" y="100" width="530" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="jobs" value="topic: jobs&#10;(key = user)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="150" width="110" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="worker" value="worker-server&#10;consumer group=workers&#10;simulate work → emit&#10;(at-least-once)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;" vertex="1" parent="1">
+          <mxGeometry x="750" y="145" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="events" value="topic: events&#10;(key = user)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="960" y="150" width="120" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Kafka fan-out subscribers ===== -->
+        <mxCell id="notif" value="🔔 notification-server&#10;group = notifiers" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D4E1F5;strokeColor=#6C8EBF;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="105" width="220" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="analytic" value="📊 analytic-server&#10;group = analytics" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D4E1F5;strokeColor=#6C8EBF;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="180" width="220" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="ai" value="🤖 ai-server&#10;group = ai" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D4E1F5;strokeColor=#6C8EBF;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="255" width="220" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Redpanda Console UI ===== -->
+        <mxCell id="console" value="redpanda-console&#10;UI :8081" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="600" y="245" width="140" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Redis / Celery track ===== -->
+        <mxCell id="redis" value="Redis&#10;Celery broker&#10;+ result backend&#10;(:6379/0)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#F8CECC;strokeColor=#B85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="510" width="130" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="celery-worker" value="celery-worker&#10;--concurrency=1&#10;runs process_task ⚙️&#10;runs heartbeat_report ⏰" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="820" y="500" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="celery-beat" value="celery-beat&#10;scheduler&#10;fires heartbeat_report&#10;every 30s" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="820" y="620" width="180" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="flower" value="flower&#10;Celery UI :8082" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="600" y="625" width="130" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Legend ===== -->
+        <mxCell id="legend" value="Legend" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=8;spacingTop=6;fillColor=#FFFFFF;strokeColor=#999999;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1130" y="470" width="270" height="225" as="geometry" />
+        </mxCell>
+        <mxCell id="lg-kafka" value="Kafka producer/consumer service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1145" y="500" width="240" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="lg-topic" value="Kafka topic (event log)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=8;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1145" y="532" width="240" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lg-redis" value="Redis broker (Celery)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=8;fillColor=#F8CECC;strokeColor=#B85450;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1145" y="566" width="240" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lg-cworker" value="Celery worker" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1145" y="600" width="115" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="lg-beat" value="Scheduler (Beat)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1268" y="600" width="117" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="lg-ui" value="Monitoring UI" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=10;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="1145" y="632" width="115" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="lg-gw" value="Gateway / stateless" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1268" y="632" width="117" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="lg-dash" value="- - - -  dashed = UI observes broker (read-only)" style="text;html=1;align=left;fontSize=10;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="1145" y="662" width="240" height="24" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Edges: gateway ===== -->
+        <mxCell id="e-client-nginx" value="HTTP" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;" edge="1" parent="1" source="client" target="nginx">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-nginx-api" value="/api/*" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;" edge="1" parent="1" source="nginx" target="api">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-nginx-mon" value="/monitor" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;" edge="1" parent="1" source="nginx" target="monitor">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Edges: Kafka track ===== -->
+        <mxCell id="e-api-jobs" value="produce → jobs" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#6C8EBF;fontColor=#10739E;strokeWidth=2;" edge="1" parent="1" source="api" target="jobs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-jobs-worker" value="consume (group=workers)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#6C8EBF;fontColor=#10739E;" edge="1" parent="1" source="jobs" target="worker">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-worker-events" value="produce → events" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#6C8EBF;fontColor=#10739E;strokeWidth=2;" edge="1" parent="1" source="worker" target="events">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-events-notif" value="fan-out" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#6C8EBF;" edge="1" parent="1" source="events" target="notif">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-events-analytic" value="fan-out" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#6C8EBF;" edge="1" parent="1" source="events" target="analytic">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-events-ai" value="fan-out" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#6C8EBF;" edge="1" parent="1" source="events" target="ai">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Edges: Celery track ===== -->
+        <mxCell id="e-api-redis" value="send_task('process_task')" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#82B366;fontColor=#6B8E23;strokeWidth=2;" edge="1" parent="1" source="api" target="redis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-beat-redis" value="enqueue every 30s&#10;heartbeat_report" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#D79B00;fontColor=#B46504;" edge="1" parent="1" source="celery-beat" target="redis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-redis-worker" value="dequeue &amp; run" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#82B366;fontColor=#6B8E23;strokeWidth=2;" edge="1" parent="1" source="redis" target="celery-worker">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Edges: UIs observing (dashed) ===== -->
+        <mxCell id="e-console-rp" value="watch topics&#10;&amp; groups" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=open;dashed=1;strokeColor=#999999;fontColor=#999999;" edge="1" parent="1" source="console" target="events">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-flower-redis" value="watch tasks" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=open;dashed=1;strokeColor=#999999;fontColor=#999999;" edge="1" parent="1" source="flower" target="redis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
